@@ -1,0 +1,9 @@
+{
+    "type": "oracle",
+    "host": "localhost",
+    "username": "VECSUS",
+    "password": "123",
+    "port": 1521,
+    "sid": "orcl",
+    "entities": ["dist/entities/**/*.js"]
+}

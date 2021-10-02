@@ -16,12 +16,14 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
-@PersistenceContext
+
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
 @RestController
 @RequestMapping("/api/empleados")
 public class EmpleadoController {
 
+	//@PersistenceContext
+	@Autowired
     EntityManager em;
 
     @Autowired
@@ -131,18 +133,15 @@ public class EmpleadoController {
                                           @RequestParam(name = "tipoF", required = false) String tipoF,
                                           @RequestParam(name = "valorF", required = false) String valorF) {
         Map<String, Object> resp = new HashMap<>();
-
-        //sb.append("SELECT  c.nombre_ciudad, ed.nombre_edificio FROM EMPLEADO e INNER JOIN EDIFICIO ed ON e.codigo_edificio =ed.codigo_edificio");
-        //sb.append(" INNER JOIN CIUDAD c ON ed.codigo_ciudad = c.codigo_ciudad ");
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT  c.nombre_ciudad, ed.nombre_edificio, e.* FROM EMPLEADO e INNER JOIN EDIFICIO ed ON e.codigo_edificio =ed.codigo_edificio");
+        sb.append(" INNER JOIN CIUDAD c ON ed.codigo_ciudad = c.codigo_ciudad ");
         try {
-            StringBuilder sb = new StringBuilder();
+            
             if (!Objects.isNull(estado)) {
-                //sb.append("WHERE e.estado = '"+estado+"'");
-                sb.append("SELECT e.PRIMER_APELLIDO FROM EMPLEADO e");
-
+                sb.append("WHERE e.estado = '"+estado+"'");
+                                
                 System.out.println(sb.toString());
-
-
 
                 resp.put("code", 200);
                 resp.put("message", "OK");
@@ -150,27 +149,30 @@ public class EmpleadoController {
                     sb.setLength(0); sb = new StringBuilder();
                     sb.append("SELECT e.*, c.nombre_ciudad, nombre_edificio FROM EMPLEADO e INNER JOIN EDIFICIO ed ON e.codigo_edificio =ed.codigo_edificio");
                     sb.append(" INNER JOIN CIUDAD c ON ed.codigo_ciudad = c.codigo_ciudad");
-                    sb.append(" WHERE e.estado = "+estado+" ");
-                    sb.append("AND c.codigo_ciudad = "+codigoCiudad);
+                    sb.append(" WHERE e.estado = '"+estado+"' ");
+                    sb.append(" AND c.codigo_ciudad = "+codigoCiudad);
                 }
                 else if (!Objects.isNull(tipoF)  && !Objects.isNull(valorF)) {
                     switch (tipoF) {
                         case "numeroIdentificacion":
 
                             if(!Objects.isNull(codigoCiudad)){
-                                sb.append(" AND e.numero_identificacion = " + valorF);
+                                sb.append(" AND e.numero_identificacion = '" + valorF + "'");
                                 TypedQuery<Tuple> query = (TypedQuery<Tuple>) em.createNativeQuery(sb.toString(), Tuple.class);
                                 List<Tuple> lsResult = query.getResultList();
-                                return new ResponseEntity<>(lsResult, HttpStatus.OK);
+                                resp.put("Resultado",lsResult);
+                                return new ResponseEntity<>(resp, HttpStatus.OK);
                             }else{
                                 sb.setLength(0); sb = new StringBuilder();
                                 sb.append("SELECT e.*, c.nombre_ciudad, nombre_edificio FROM EMPLEADO e INNER JOIN EDIFICIO ed ON e.codigo_edificio =ed.codigo_edificio");
                                 sb.append(" INNER JOIN CIUDAD c ON ed.codigo_ciudad = c.codigo_ciudad");
-                                sb.append(" WHERE e.estado = "+estado+" ");
-                                sb.append(" AND e.numero_identificacion = " + valorF);
+                                sb.append(" WHERE e.estado = '"+estado+"' ");
+                                sb.append(" AND e.numero_identificacion = '" + valorF+"'");
                                 TypedQuery<Tuple> query = (TypedQuery<Tuple>) em.createNativeQuery(sb.toString(), Tuple.class);
                                 List<Tuple> lsResult = query.getResultList();
-                                return new ResponseEntity<>(lsResult, HttpStatus.OK);
+                                resp.put("Resultado",lsResult);
+                                return new ResponseEntity<>(resp, HttpStatus.OK);
+                                
                             }
                         case "nombreEmpleado":
 
@@ -178,16 +180,18 @@ public class EmpleadoController {
                                 sb.append(" AND e.nombre_completo LIKE '%" + valorF+"%'");
                                 TypedQuery<Tuple> query = (TypedQuery<Tuple>) em.createNativeQuery(sb.toString(), Tuple.class);
                                 List<Tuple> lsResult = query.getResultList();
-                                return new ResponseEntity<>(lsResult, HttpStatus.OK);
+                                resp.put("Resultado",lsResult);
+                                return new ResponseEntity<>(resp, HttpStatus.OK);
                             }else{
                                 sb.setLength(0); sb = new StringBuilder();
                                 sb.append("SELECT e.*, c.nombre_ciudad, nombre_edificio FROM EMPLEADO e INNER JOIN EDIFICIO ed ON e.codigo_edificio =ed.codigo_edificio");
                                 sb.append(" INNER JOIN CIUDAD c ON ed.codigo_ciudad = c.codigo_ciudad");
-                                sb.append(" WHERE e.estado = "+estado+" ");
+                                sb.append(" WHERE e.estado = '"+estado+"' ");
                                 sb.append(" AND e.nombre_completo LIKE '%" + valorF+"%'");
                                 TypedQuery<Tuple> query = (TypedQuery<Tuple>) em.createNativeQuery(sb.toString(), Tuple.class);
                                 List<Tuple> lsResult = query.getResultList();
-                                return new ResponseEntity<>(lsResult, HttpStatus.OK);
+                                resp.put("Resultado",lsResult);
+                                return new ResponseEntity<>(resp, HttpStatus.OK);
                             }
 
                         default:
@@ -200,16 +204,16 @@ public class EmpleadoController {
                 } else {
                     System.out.println(sb.toString());
 
-                    Query query =  em.createNativeQuery(sb.toString());
-
+                    Query query = em.createNativeQuery(sb.toString());
                     List<Tuple> lsResult = query.getResultList();
                     resp.put("Resultado",lsResult);
                     return new ResponseEntity<>(resp, HttpStatus.OK);
                 }
                 System.out.println(sb.toString());
                 Query query = em.createNativeQuery(sb.toString());
-                List<Tuple> lsResult = query.getResultList();
-                return new ResponseEntity<>(lsResult, HttpStatus.OK);
+                List<Tuple> lsResult = (List<Tuple>) query.getResultList();
+                resp.put("Resultado",lsResult);
+                return new ResponseEntity<>(resp, HttpStatus.OK);
             } else {
                 resp.put("code", 400);
                 resp.put("succes",false);
@@ -220,7 +224,7 @@ public class EmpleadoController {
         } catch (Exception e) {
             resp.put("code", 500);
             resp.put("message", "Error no controlado");
-            resp.put("errorData", e.getMessage());
+            resp.put("errorData", e );
             return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
