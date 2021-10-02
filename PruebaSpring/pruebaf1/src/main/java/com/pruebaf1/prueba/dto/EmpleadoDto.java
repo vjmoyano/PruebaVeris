@@ -6,7 +6,7 @@ import java.sql.Date;
 
 public class EmpleadoDto {
 
-    private int codigoEmpleado;
+    private String codigoEmpleado;
 
     private String tipoIdentificacion;
 
@@ -40,7 +40,7 @@ public class EmpleadoDto {
         this.fechaRegistro = new Date(System.currentTimeMillis());
     }
 
-    public EmpleadoDto(int codigoEmpleado, String tipoIdentificacion,
+    public EmpleadoDto(String codigoEmpleado, String tipoIdentificacion,
                        String numeroIdentificacion, String primerNombre,
                        String segundoNombre, String primerApellido,
                        String segundoApellido, String nombreCompleto, String mail,
@@ -64,11 +64,11 @@ public class EmpleadoDto {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public int getCodigoEmpleado() {
+    public String getCodigoEmpleado() {
         return codigoEmpleado;
     }
 
-    public void setCodigoEmpleado(int codigoEmpleado) {
+    public void setCodigoEmpleado(String codigoEmpleado) {
         this.codigoEmpleado = codigoEmpleado;
     }
 
@@ -185,15 +185,16 @@ public class EmpleadoDto {
     }
 
     public String nombreCompleto() {
-        String nombre = "";
-        nombre += this.primerNombre + " ";
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(this.primerNombre+" ");
+
         if (this.segundoNombre != null) {
-            nombre += this.segundoNombre + " ";
+            sb.append(this.segundoNombre+" ");
         }
-        nombre += this.primerApellido + " ";
+        sb.append(this.primerApellido);
         if (this.segundoApellido != null) {
-            nombre += this.segundoApellido;
+            sb.append(this.segundoApellido+" ");
         }
-        return nombre;
+        return sb.toString();
     }
 }

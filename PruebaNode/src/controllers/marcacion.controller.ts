@@ -30,10 +30,10 @@ export const postMarcacion = async (
     res: Response
 ): Promise<Response> => {
     try {
-        const Marcacion = new Marcacion();
-        getRepository(Marcacion).merge(Marcacion, req.body);
-        const Marcacion = await getRepository(Marcacion).create(Marcacion);
-        const newMarcacion = await getRepository(Marcacion).save(Marcacion);
+        var marcacion = new Marcacion();
+        getRepository(Marcacion).merge(marcacion, req.body);
+        const marcacionN = await getRepository(Marcacion).create(marcacion);
+        const newMarcacion = await getRepository(Marcacion).save(marcacionN);
         return res.status(200).json({
             code: 200,
             success: true,

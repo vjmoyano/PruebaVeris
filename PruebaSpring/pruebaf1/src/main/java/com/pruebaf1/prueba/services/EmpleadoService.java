@@ -32,7 +32,7 @@ public class EmpleadoService {
     public int createEmpleado(EmpleadoDto data){
         System.out.println("servicio empleado");
         Empleado empleado = new Empleado();
-        empleado.setCodigoEmpleado(data.getCodigoEmpleado());
+        empleado.setCodigoEmpleado(Integer.parseInt(data.getCodigoEmpleado()));
         empleado.setCodigoEdificio(data.getCodigoEdificio());
         empleado.setEstado(data.getEstado());
         empleado.setFechaNacimiento(data.getFechaNacimiento());

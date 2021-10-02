@@ -41,8 +41,9 @@ export const putEdificio = async (
                 data: obEdificio,
             });
         }
-        getRepository(Edificio).merge(Edificio, req.body);
-        const resp = await getRepository(Edificio).save(Edificio);
+        const edificio = new Edificio();
+        getRepository(Edificio).merge(edificio, req.body);
+        const resp = await getRepository(Edificio).save(edificio);
         return res.status(200).json({
             code: 200,
             success: true,
@@ -57,3 +58,4 @@ export const putEdificio = async (
             errorData: err,
         });
     }
+}
