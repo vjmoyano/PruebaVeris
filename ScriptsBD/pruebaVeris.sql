@@ -43,8 +43,6 @@ CREATE TABLE empleado (
 )
 
 
-
-
 CREATE TABLE marcacion (
     secuencia NUMBER DEFAULT SEQ_MARCACION.nextval,
     codigo_empleado NUMBER NOT NULL,

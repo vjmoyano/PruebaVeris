@@ -2,9 +2,17 @@ package com.pruebaf1.prueba.dto;
 
 
 import java.sql.Date;
+import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EmpleadoDto {
+
 
     private String codigoEmpleado;
 
@@ -35,6 +43,7 @@ public class EmpleadoDto {
     private String usuarioRegistro;
 
     private Date fechaRegistro;
+    
 
     public EmpleadoDto() {
         this.fechaRegistro = new Date(System.currentTimeMillis());
@@ -191,10 +200,12 @@ public class EmpleadoDto {
         if (this.segundoNombre != null) {
             sb.append(this.segundoNombre+" ");
         }
-        sb.append(this.primerApellido);
+        sb.append(this.primerApellido + " ");
         if (this.segundoApellido != null) {
             sb.append(this.segundoApellido+" ");
         }
         return sb.toString();
     }
+    
+
 }

@@ -9,5 +9,6 @@ public class ResponseDto {
 	public String email;
 	public String identificacion;
 	public String sexo;
+	public String codigoEmpleado;
 
 }

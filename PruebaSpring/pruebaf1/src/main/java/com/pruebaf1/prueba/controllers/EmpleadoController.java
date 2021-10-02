@@ -42,6 +42,7 @@ public class EmpleadoController {
         Map<String, Object> resp = new LinkedHashMap<>();
         Map<String, Object> check = new LinkedHashMap<>();
         Map<String, Object> data = new LinkedHashMap<>();
+        this.currentUser();
 
         if(Objects.isNull(empleado.getEstado())||empleado.getEstado().isEmpty()){
             validacion = true;
@@ -88,6 +89,7 @@ public class EmpleadoController {
             resp.put("data", new ArrayList());
             return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
         }
+        empleado.setUsuarioRegistro(this.currentUser());
 
         int codigo = empleadoServices.createEmpleado(empleado);
         try {
@@ -120,9 +122,9 @@ public class EmpleadoController {
                                           @RequestParam(name = "codigoCiudad", required = false) String codigoCiudad,
                                           @RequestParam(name = "tipoF", required = false) String tipoF,
                                           @RequestParam(name = "valorF", required = false) String valorF) {
-        Map<String, Object> resp = new HashMap<>();
+        Map<String, Object> resp = new LinkedHashMap<>();
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT  c.nombre_ciudad as ciudad, ed.nombre_edificio as edi, e.* FROM EMPLEADO e INNER JOIN EDIFICIO ed ON e.codigo_edificio =ed.codigo_edificio");
+        sb.append("SELECT  c.nombre_ciudad as ciudad, ed.nombre_edificio as edi, e.*, e.codigo_empleado as cod FROM EMPLEADO e INNER JOIN EDIFICIO ed ON e.codigo_edificio =ed.codigo_edificio");
         sb.append(" INNER JOIN CIUDAD c ON ed.codigo_ciudad = c.codigo_ciudad ");
         try {
             if(Objects.isNull(estado)) {
@@ -158,7 +160,7 @@ public class EmpleadoController {
             	empleado.email = tuple.get("MAIL",String.class).toString();
             	empleado.identificacion = tuple.get("NUMERO_IDENTIFICACION",String.class).toString();
             	empleado.sexo = tuple.get("SEXO",String.class).toString();
-            	
+            	empleado.codigoEmpleado = tuple.get("cod",Number.class).toString();
             	empleados.add(empleado);
             }
             
@@ -174,6 +176,20 @@ public class EmpleadoController {
             resp.put("errorData", e );
             return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+	public String currentUser() {
+    	String usuario = "";
+    	StringBuilder sb = new StringBuilder();
+        sb.append("select user as usuario from dual");
+        TypedQuery<Tuple> query = (TypedQuery<Tuple>) em.createNativeQuery(sb.toString(), Tuple.class);
+        List<Tuple> lsResult = query.getResultList();
+        for(Tuple tuple: lsResult) {
+        	usuario = tuple.get("usuario",String.class).toString();
+        }
+        System.out.println(usuario);
+        return usuario;
     }
     
 }
