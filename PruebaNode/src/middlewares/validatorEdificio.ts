@@ -1,4 +1,4 @@
-import { body, param, query } from "express-validator";
+import { body, param } from "express-validator";
 
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
@@ -12,15 +12,15 @@ const dataError = (
     if (!errors.isEmpty()) {
         return res.status(400).json({
             code: 400,
-            message: "Validación del Request",
+            message: "Parametros Edificio",
             errorData: errors.mapped(),
         });
     }
     next();
 };
 
-export const validatorPutEdificio: any = [
-    body("codigoEdificio", "El codigo Edificio es obligatorio").not().isEmpty(),
+export const validatorPutEdificio = [
+    param("codigoEdificio", "El codigo Edificio es obligatorio").not().isEmpty(),
     body("nombreEdificio", "El codigo Edificio es obligatorio").not().isEmpty(),
     body("codigoCiudad", "El codigo Edificio es obligatorio").not().isEmpty(),
     dataError,

@@ -30,14 +30,14 @@ export const postMarcacion = async (
     res: Response
 ): Promise<Response> => {
     try {
-        var marcacion = new Marcacion();
+        const marcacion = new Marcacion();
         getRepository(Marcacion).merge(marcacion, req.body);
         const marcacionN = await getRepository(Marcacion).create(marcacion);
         const newMarcacion = await getRepository(Marcacion).save(marcacionN);
         return res.status(200).json({
             code: 200,
             success: true,
-            message: "OK",
+            message: "Se creo la marcación",
             data: {
                 secuenciaMarcacion: newMarcacion.secuencia,
             },

@@ -31,19 +31,21 @@ export const putEdificio = async (
 ): Promise<Response> => {
     try {
         const obEdificio = await getRepository(Edificio).findOne({
-            where: {                codigoEdificio: req.params.codigoEdificio            },
+            where: {codigoEdificio: req.params.codigoEdificio},
         });
         if (!obEdificio) {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: "El codigoEdificio no existe!",
+                message: "El edificio con aquel codigo no existe!",
                 data: obEdificio,
             });
         }
-        const edificio = new Edificio();
-        getRepository(Edificio).merge(edificio, req.body);
-        const resp = await getRepository(Edificio).save(edificio);
+        
+        getRepository(Edificio).merge(obEdificio, req.body);
+        console.log(obEdificio);
+        const resp = await getRepository(Edificio).save(obEdificio);
+        console.log(resp);
         return res.status(200).json({
             code: 200,
             success: true,

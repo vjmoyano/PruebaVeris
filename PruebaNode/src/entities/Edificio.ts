@@ -3,11 +3,15 @@ import {
     Column,
     Entity,
     JoinColumn,
+    ManyToOne,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
+import { Ciudad } from "./Ciudad";
+import { Marcacion } from "./Marcacion";
 
-@Entity("Edificio")
+@Entity("EDIFICIO")
 export class Edificio{
 
     @PrimaryGeneratedColumn({ name: "CODIGO_EDIFICIO" })
@@ -24,6 +28,24 @@ export class Edificio{
 
     @Column({ name: "FECHA_REGISTRO" })
     fechaRegistro: Date;
+
+    // @OneToOne(
+    //     () => Ciudad,
+    //     ciudad => ciudad.edificios,
+    //     {onDelete: "CASCADE", 
+    //     eager: true
+    // }
+    // )
+    // @JoinColumn({
+    //     name: "CODIGO_CIUDAD"
+    // })
+    // ciudad: Ciudad;
+
+    // @OneToMany( 
+    //     () => Marcacion,
+    //     marcacion => marcacion.edificio
+    // )
+    // marcaciones: Marcacion[];
 
     @BeforeInsert()
     beforeInsertActions() {

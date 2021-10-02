@@ -1,9 +1,9 @@
+import { Marcacion } from './Marcacion';
 import {
     BeforeInsert,
     Column,
     Entity,
-    JoinColumn,
-    OneToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -54,6 +54,12 @@ export class Empleado{
 
     @Column({ name: "FECHA_REGISTRO" })
     fechaRegistro: Date;
+
+    // @OneToMany( 
+    //     () => Marcacion,
+    //     marcacion => marcacion.empleado
+    // )
+    // marcaciones: Marcacion[];
 
     @BeforeInsert()
     beforeInsertActions() {

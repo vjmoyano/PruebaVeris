@@ -2,10 +2,12 @@ import {
     BeforeInsert,
     Column,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
+import { Edificio } from "./Edificio";
 
-@Entity("Ciudad")
+@Entity("CIUDAD")
 export class Ciudad{
 
     @PrimaryGeneratedColumn({ name: "CODIGO_CIUDAD" })
@@ -19,6 +21,12 @@ export class Ciudad{
 
     @Column({ name: "FECHA_REGISTRO" })
     fechaRegistro: Date;
+
+    // @OneToMany( 
+    //     () => Edificio,
+    //     edificio => edificio.ciudad
+    // )
+    // edificios: Edificio[];
 
     @BeforeInsert()
     beforeInsertActions() {
